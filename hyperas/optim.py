@@ -29,7 +29,8 @@ def minimize(model,
              eval_space=False,
              return_space=False,
              keep_temp=False,
-             data_args=None):
+             data_args=None,
+             custom_temp=None):
     """
     Minimize a keras model for given data and implicit hyperparameters.
 
@@ -69,7 +70,8 @@ def minimize(model,
                                      notebook_name=notebook_name,
                                      verbose=verbose,
                                      keep_temp=keep_temp,
-                                     data_args=data_args)
+                                     data_args=data_args,
+                                     custom_temp=custom_temp)
 
     best_model = None
     for trial in trials:
@@ -94,12 +96,15 @@ def minimize(model,
 
 def base_minimizer(model, data, functions, algo, max_evals, trials,
                    rseed=1337, full_model_string=None, notebook_name=None,
-                   verbose=True, stack=3, keep_temp=False, data_args=None):
+                   verbose=True, stack=3, keep_temp=False, data_args=None, custom_temp=None):
     if full_model_string is not None:
         model_str = full_model_string
     else:
         model_str = get_hyperopt_model_string(model, data, functions, notebook_name, verbose, stack, data_args=data_args)
-    temp_file = './temp_model.py'
+    temp_file = './temp_model'
+    if custom_temp != None:
+        temp_file += '_' + custom_temp
+    temp_file += '.py'
     write_temp_files(model_str, temp_file)
 
     if 'temp_model' in sys.modules:

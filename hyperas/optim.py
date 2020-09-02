@@ -111,7 +111,7 @@ def base_minimizer(model, data, functions, algo, max_evals, trials,
         del sys.modules["temp_model"]
 
     try:
-        mod = __import__(temp_file[2:])
+        mod = __import__(temp_file[2:-3])
         keras_fmin_fnct = getattr(mod, 'keras_fmin_fnct')
         get_space = getattr(mod, 'get_space')
     except:
